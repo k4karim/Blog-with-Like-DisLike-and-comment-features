@@ -1,0 +1,23 @@
+{% extends 'basic_app/base.html' %}
+
+{% block body_block %}
+    
+    
+        
+            <h2>NewPost</h2>
+			
+			<form method="POST" class="pst_form form-horizontal">{%csrf_token%}
+			  {{form.as_p}}
+			  <input class="btn btn-success" type="submit" value="Add New Post">
+			  
+			</form>
+			
+        
+    
+    
+
+
+    
+
+{%endblock%}
+  

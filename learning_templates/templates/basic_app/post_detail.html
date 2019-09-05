@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% extends "basic_app/base.html" %}
+{% block body_block %}
+	<title>{{ post.title }}</title>
+    <div class="content container">
+    <div class="row">
+        <div class="col-md-8">
+    <div class="post">
+        {% if post.published_date %}
+            <div class="date">
+                <span class="glyphicon glyphicon-time"></span>: {{ post.published_date|date:'d-m-Y' }}
+            </div>
+        {% else %}
+		    <a class="btn btn-success" href="{% url 'basic_app:post_publish' pk=post.pk %}">Publish</a>
+		{% endif %}
+		
+		
+		{%if user.is_authenticated and post.author == request.user %}
+		  <a class="btn btn-default" href="{% url 'basic_app:post_edit' pk=post.pk %}" class="navbar-link"><span class="glyphicon glyphicon-pencil"></span></a>
+		  <a class="btn btn-danger" href="{% url 'basic_app:post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+        {% endif %}
+		<em>{{ post.author }}</em>
+		<h2>{{ post.title }}</h2>
+		
+		<a  class="btn btn-success" href="{% url 'basic_app:upvote' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-up"></span></a><strong> {{post.upvote}}</strong>
+		<a  class="btn btn-danger" href="{% url 'basic_app:downvote' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-down"></span></a><strong> {{post.downvote}}</strong>
+        <hr>
+		<p>{{ post.text|linebreaksbr }}</p>
+    </div>
+	
+	<div class="comments">
+	   <h2>Comments</h2>
+	   <hr id="endline">
+	   {% for comment in post.comments.all %}
+	
+	    
+	        <div class="buttons">
+            
+				{% if user.is_authenticated and post.author == request.user and not comment.approved_comment %}
+					<a class="btn btn-default" href="{% url 'basic_app:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+					<a class="btn btn-default" href="{% url 'basic_app:comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+				{% elif user.is_authenticated and post.author == request.user and comment.approved_comment %}
+					<a class="btn btn-default" href="{% url 'basic_app:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+					<a class="btn btn-default" href="{% url 'basic_app:uncomment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ban-circle"></span></a>
+					
+				{% endif %}
+			
+            </div>
+			{% if user.is_authenticated or comment.approved_comment %}
+				
+				<div class="comment-data">
+					
+					<strong>{{ comment.author }}</strong>
+					<span class="glyphicon glyphicon-time"></span> <em>{{ comment.created_date|date:'d-m-Y' }}</em>
+					<p>{{ comment.text|linebreaks }}</p>
+				</div>
+				<hr>
+			{% endif %}   
+	
+	
+	    {% endfor %}
+	
+	
+	
+	<div class="comment-form">
+    <h1>Add New comment</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" class="btn btn-success" value="Post Comment">
+    </form>
+	</div></div></div></div></div>
+    {% endblock %}
+	
