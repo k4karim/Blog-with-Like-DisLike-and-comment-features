@@ -17,12 +17,17 @@ from django.conf.urls import url,include
 from django.contrib import admin
 #from basic_app import views
 from django.contrib.auth import views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     #url(r'^$',views.index,name='index'),
     url(r'^admin/', admin.site.urls),
     url(r'',include('basic_app.urls')),
     
+
     url(r'^accounts/login/$', views.login, name='user_login'),
     url(r'^accounts/logout/$', views.logout, name='logout', kwargs={'next_page': '/'}),
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+
