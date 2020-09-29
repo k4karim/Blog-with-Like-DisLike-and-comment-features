@@ -4,23 +4,32 @@
 
     <div class="content container">
     <div class="row">
-	
+
         <div class="col-md-8">
-            <h2>NewPost</h2>
-			
-			<form method="POST" class="pst_form">{%csrf_token%}
-			  {{form.as_p}}
-			  <input class="btn btn-success" type="submit" value="Update Post">
-			  <a class="btn btn-warning" href="{% url 'basic_app:post_detail' pk=post.pk %}" ><span class="glyphicon glyphicon-arrow-left"></span></a>
-			</form>
-			
+            <h2>Update Post</h2>
+
+			<form method="POST" >
+               {% csrf_token %}
+
+			   <div class="form-group">
+				  {{ form.title}}
+			   </div>
+
+			   <div class="form-group">
+				  {{ form.text}}
+			   </div>
+
+               <button type="submit" class="btn btn-success">Update</button>
+               <a class="btn btn-warning" href="{% url 'basic_app:post_detail' pk=post.pk %}" ><span class="glyphicon glyphicon-arrow-left"></span></a>
+            </form>
+
+
         </div>
-		    
+
     </div>
     </div>
 
 
-    
+
 
 {%endblock%}
-  
