@@ -7,9 +7,9 @@ from django.contrib.auth.models import User
 class UserProfileInfo(models.Model):
 
     # Create relationship (don't inherit from User!)
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,)
 
-    
+
     profile_pic = models.ImageField(upload_to='profile_pics',blank=True)
 
     def __str__(self):
@@ -22,9 +22,9 @@ class Post(models.Model):
     text = models.TextField()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
-    upvote = models.IntegerField(default=0,blank=True, null=True)
-    downvote = models.IntegerField(default=0,blank=True, null=True)
-    
+    #upvote = models.IntegerField(default=0,blank=True, null=True)
+    #downvote = models.IntegerField(default=0,blank=True, null=True)
+
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -49,7 +49,20 @@ class Comment(models.Model):
         self.approved_comment = True
         self.save()
 
-    
+
 
     def __str__(self):
         return self.text
+
+
+
+class Upvotes(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE,related_name='upvote')
+    author  = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_date = models.DateTimeField(default=timezone.now)
+
+
+class Downvotes(models.Model):
+    post = models.ForeignKey('Post', on_delete=models.CASCADE,related_name='downvote')
+    author  = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_date = models.DateTimeField(default=timezone.now)
