@@ -8,24 +8,26 @@
         <div class="col-md-8">
             {% for post in posts %}
                 <div class="post">
-				  
-				  
+
+
 				    <p class="date">
                        Published on: {{ post.published_date|date:'d-m-Y' }}
                     </p>
-					
+
 					<h2><a href="{% url 'basic_app:post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
 					<p>{{ post.text|truncatechars:200 }}</p>
-					<a href="{% url 'basic_app:post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
-					<a  class="btn btn-success" href="{% url 'basic_app:upvote' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-up"></span></a><strong> {{post.upvote}}</strong>
-		<a  class="btn btn-danger" href="{% url 'basic_app:downvote' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-down"></span></a><strong> {{post.downvote}}</strong>
-					
+					<div class="likebuttons">
+                       <a  class="btn btn-success" href="{% url 'basic_app:like' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-up"></span> {{post.upvote.count}}</a>
+			           <a  class="btn btn-danger" href="{% url 'basic_app:dislike' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-down"></span> {{post.downvote.count}}</a>
+                       <a class="btn btn-info" href="{% url 'basic_app:post_detail' pk=post.pk %}"><span class="glyphicon glyphicon glyphicon-comment"></span> {{ post.approved_comments.count }}</a>
+                    </div>
+
 					{%if user.is_authenticated and post.author == request.user %}
 						<a class="btn btn-default" href="{% url 'basic_app:post_edit' pk=post.pk %}" class="navbar-link"><span class="glyphicon glyphicon-pencil"></span></a>
 						<a class="btn btn-danger" href="{% url 'basic_app:post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
                     {%endif%}
-					
-                   
+
+
                 </div>
 				<hr>
             {% endfor %}
@@ -34,7 +36,6 @@
     </div>
 
 
-    
+
 
 {%endblock%}
-  
