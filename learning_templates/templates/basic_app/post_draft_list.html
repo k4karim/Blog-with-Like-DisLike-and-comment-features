@@ -1,36 +1,98 @@
-{% extends 'basic_app/base.html' %}
-
+<!DOCTYPE html>
+{% extends "basic_app/base.html" %}
 {% block body_block %}
-    <div class="content container">
-    <div class="row">
-        <div class="col-md-8">
-            {% for post in posts %}
-			    
-                <div class="post">
-                    <p class="date">Created Date: {{ post.created_date|date:'d-m-Y' }}</p>
-					
-					<h2><a href="{% url 'basic_app:post_detail' pk=post.pk %}">{{ post.title }}</a></h2>
-					<a class="btn btn-success" href="{% url 'basic_app:post_publish' pk=post.pk %}">Publish</a>
-					<a class="btn btn-default" href="{% url 'basic_app:post_edit' pk=post.pk %}" class="navbar-link"><span class="glyphicon glyphicon-pencil"></span></a>
-		            <a class="btn btn-danger" href="{% url 'basic_app:post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-					<p>{{ post.text|truncatechars:200 }}</p>
-					
-                   
-                </div>
-				
-				
-				<hr>
-			{% empty %}
-            <p>No posts in this folder.</p>
+<title>{{ post.title }}</title>
+<div class="container">
+   <div class="row">
+      <div class="col-md-10">
+
+
+         <div class="post">
+            {% if not post.published_date %}
+               <a class="btn btn-success" href="{% url 'basic_app:post_publish' pk=post.pk %}">Publish</a>
+            {% endif %}
+
+            {%if user.is_authenticated and post.author == request.user %}
+            <a class="btn btn-default" href="{% url 'basic_app:post_edit' pk=post.pk %}" class="navbar-link"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-danger" href="{% url 'basic_app:post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+            <div style="display:inline;">
+               <h2 >{{ post.title }}</h2>
+               {% if post.author.userprofileinfo.profile_pic %}
+               <em>Posted by: <img src="{{post.author.userprofileinfo.profile_pic.url}}" class="img-circle"  width="30" height="30" > </em>
+               {% else %}
+               <em>Posted by: <img src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png" class="img-circle"  width="30" height="30" ></em>
+               {% endif %}
+               <a href="{% url 'basic_app:profilepage' pk=post.author.userprofileinfo.pk %}">{{ post.author }}</a>
+
+               {% if post.published_date %}
+
+                  <small>on: <span class="glyphicon glyphicon-time"></span><em>: {{ post.published_date|date:'d-m-Y' }}</em></small>
+
+
+               {% endif %}
+
+            </div>
+
+            <br>
+
+            <div class="likebuttons">
+              <a  class="btn btn-success" href="{% url 'basic_app:like' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-up"></span> {{number_of_likes}}</a>
+			  <a  class="btn btn-danger" href="{% url 'basic_app:dislike' pk=post.pk %}"><span class="glyphicon glyphicon-thumbs-down"></span> {{number_of_dislikes}}</a>
+
+			  <a  class="btn btn-info" href="#comments"><span class="glyphicon glyphicon glyphicon-comment"></span> {{post.comments.count}}</a>
+            </div>
+
+            <hr>
+            <p class="articletext">{{ post.text|linebreaksbr }}</p>
+         </div>
+         <div class="comments" id="comments">
+            <h2>Comments</h2>
+            <hr id="endline">
+
+            {% if user.is_authenticated %}
+            <div class="comment-form-main" >
+            <button class="btn btn-warning" onclick="myFunction()">Write Comment</button>
+            <div class="comment-form" id="comment_form">
+               <h3>Add New comment</h3>
+               <form method="POST" >
+                  {% csrf_token %}
+
+				  <div class="form-group shadow-textarea">
+				  {{ form.text}}
+				  </div>
+
+                  <button type="submit" class="btn btn-success">Comment</button>
+               </form>
+            </div>
+            </div>
+            {% else %}
+            <a class="btn btn-success" href="/accounts/login/"><span class="glyphicon glyphicon-log-in"></span> Please Login to comment</a
+            {% endif %}
+
+            {% for comment in post.comments.all %}
+            <div class="buttons">
+               {% if user.is_authenticated and post.author == request.user and not comment.approved_comment %}
+               <a class="btn btn-default" href="{% url 'basic_app:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+               <a class="btn btn-default" href="{% url 'basic_app:comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+               {% elif user.is_authenticated and post.author == request.user and comment.approved_comment %}
+               <a class="btn btn-default" href="{% url 'basic_app:comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+               <a class="btn btn-default" href="{% url 'basic_app:uncomment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ban-circle"></span></a>
+               {% endif %}
+            </div>
+            {% if post.author == request.user or comment.approved_comment or request.user.is_superuser %}
+            <div class="comment-data">
+               <strong>{{ comment.author }}</strong>
+               <span class="glyphicon glyphicon-time"></span> <em>{{ comment.created_date|date:'d-m-Y' }}</em>
+               <p>{{ comment.text|linebreaks }}</p>
+            </div>
+            <hr>
+            {% endif %}
             {% endfor %}
-			
-			
-        </div>
-    </div>
-    </div>
 
 
-    
-
-{%endblock%}
-  
+         </div>
+      </div>
+   </div>
+</div>
+{% endblock %}
