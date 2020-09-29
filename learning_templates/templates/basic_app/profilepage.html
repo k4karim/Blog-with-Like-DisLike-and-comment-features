@@ -1,0 +1,30 @@
+{% extends "basic_app/base.html" %}
+{% block body_block %}
+<title>{{ usersss.user.username }}</title>
+<div class="container">
+   <div class="row">
+      <div class="col-md-10">
+         <div class="user">
+
+
+            <h2>Name: {{ usersss.user.username }}</h2>
+            <small>Member Since: {{ usersss.user.date_joined }}</small>
+            <p>Last Login: {{ usersss.user.last_login }}</p>
+            <br>
+            <div class="container">
+            {% if usersss.user.userprofileinfo.profile_pic %}
+               <img src="{{usersss.user.userprofileinfo.profile_pic.url}}" class="rounded mx-auto d-block"  width="200" height="200" >
+            {% else %}
+               <img src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png" class="rounded mx-auto d-block"  width="200" height="200" >
+            {% endif %}
+            </div>
+
+
+
+            </div>
+
+         </div>
+         </div>
+         </div>
+
+{%endblock%}
