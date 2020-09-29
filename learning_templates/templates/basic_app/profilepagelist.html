@@ -1,0 +1,23 @@
+{% extends 'basic_app/base.html' %}
+
+{% block body_block %}
+<title>All users</title>
+
+         {% for userss in users %}
+         <div class="users">
+            <em>
+            {% if userss.user.userprofileinfo.profile_pic %}
+               <img src="{{userss.user.userprofileinfo.profile_pic.url}}" class="img-circle profileList"  width="30" height="30" >
+            {% else %}
+               <img src="http://s3.amazonaws.com/37assets/svn/765-default-avatar.png" class="img-circle profileList"  width="30" height="30" >
+            {% endif %}
+
+            <h2 class=""><a href="{% url 'basic_app:profilepage' pk=userss.pk %}">{{ userss.user.username }}</a></h2>
+            </em>
+
+         </div>
+         <hr>
+         {% endfor %}
+
+
+{%endblock%}
