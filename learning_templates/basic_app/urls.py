@@ -40,7 +40,5 @@ urlpatterns=[
 
     url(r'^post/(?P<pk>\d+)/downvote/$',views.dislike,name='dislike'),
 
-    url(r'^csv-converter/$',views.upload_csv2,name='upload_csv2'),
-
-    url(r'^asda/$',views.asda,name='asda'),
+   
 ]
