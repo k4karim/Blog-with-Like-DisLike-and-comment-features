@@ -3,6 +3,7 @@
 {% block body_block %}
 <title>{{ post.title }}</title>
 <div class="container">
+ {% for post in posts %}
    <div class="row">
       <div class="col-md-10">
 
@@ -94,5 +95,6 @@
          </div>
       </div>
    </div>
+{% endfor %}
 </div>
 {% endblock %}
