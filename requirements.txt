@@ -1,4 +1,4 @@
-django==2.0.13
+django==2.2.13
 pillow>=7.1.0
 
 
