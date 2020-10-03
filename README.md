@@ -11,7 +11,7 @@ to run this web app on your local machine follow these steps
 
 3) Download code zip file from github repo page and unzip it.
 
-4) in cmd type "cd path of manage.py folder"
+4) Go to server directory and run:
 
 5) python manage.py makemigrations
 
