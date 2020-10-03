@@ -5,7 +5,7 @@ http://kk2682.pythonanywhere.com/
 
 to run this web app on your local machine follow these steps
 
-1) Create virtual env and activate it
+1) Create and activate virtual environment
 
 2) pip install required packages/library 
 
