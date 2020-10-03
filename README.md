@@ -1,5 +1,4 @@
-# my_first_django
-
+# Simple multiple user Blog with Like,Dislike and comment features
 Live webapp using this repo
 http://kk2682.pythonanywhere.com/
 
